@@ -10,6 +10,7 @@ import com.ainilzb.service.StuService;
 import com.ainilzb.service.UserService;
 import com.ainilzb.utils.DateUtil;
 import com.ainilzb.utils.MD5Utils;
+import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -24,6 +25,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public UsersMapper usersMapper;
 
+    @Autowired
+    private Sid sid;
+
     private static final String USER_FACE = "http://122.152.205.72:88/group1/M00/00/05/CpoxxFw_8_qAIlFXAAAcIhVPdSg994.png";
 
     @Transactional(propagation = Propagation.SUPPORTS)
@@ -34,12 +38,16 @@ public class UserServiceImpl implements UserService {
         userExampleCriteria.andEqualTo("username",username);
         Users result = usersMapper.selectOneByExample(userExample);
 
+
         return result == null ? false:true;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public Users createUser(UserBo userBo) {
+
+        String userId = sid.nextShort();
+
         Users user = new Users();
         user.setUsername(userBo.getUsername());
         try {
@@ -57,8 +65,19 @@ public class UserServiceImpl implements UserService {
         user.setSex(Sex.secret.type);
         user.setCreatedTime(new Date());
         user.setUpdatedTime(new Date());
-        return null;
+        user.setId(userId);
+        usersMapper.insert(user);
+        return user;
     }
 
-
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public Users queryUserForLogin(String username, String password) {
+        Example userExample = new Example(Users.class);
+        Example.Criteria userExampleCriteria =  userExample.createCriteria();
+        userExampleCriteria.andEqualTo("username",username);
+        userExampleCriteria.andEqualTo("password",password);
+        Users result = usersMapper.selectOneByExample(userExample);
+        return result;
+    }
 }
