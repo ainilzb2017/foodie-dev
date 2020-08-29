@@ -9,11 +9,14 @@ import com.ainilzb.utils.MD5Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.catalina.User;
+import org.apache.catalina.connector.Request;
+import org.apache.catalina.connector.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -103,5 +106,16 @@ public class PassportController {
         userResult.setUpdatedTime(null);
         userResult.setBirthday(null);
         return userResult;
+    }
+    @ApiOperation(value = "用户退出登陆",notes = "用户退出登陆",httpMethod = "POST")
+    @PostMapping("/logout")
+    public IMOOCJSONResult logout(@RequestParam String userId, HttpServletRequest request, HttpServletResponse response){
+        //清楚用户相关的cookie
+        CookieUtils.deleteCookie(request, response,"user");
+        //TODO 用户退出登陆，需要清空购物车
+        //TODO 分布式会话中需要清楚用户数据
+
+
+        return IMOOCJSONResult.ok();
     }
 }
