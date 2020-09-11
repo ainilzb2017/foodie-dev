@@ -5,6 +5,8 @@ import com.ainilzb.mapper.*;
 import com.ainilzb.pojo.*;
 import com.ainilzb.pojo.vo.CommentLevelCountsVO;
 import com.ainilzb.pojo.vo.ItemCommentVO;
+import com.ainilzb.pojo.vo.SearchItemVO;
+import com.ainilzb.pojo.vo.ShopcartVO;
 import com.ainilzb.service.ItemService;
 import com.ainilzb.utils.DesensitizationUtil;
 import com.ainilzb.utils.PagedGridResult;
@@ -16,9 +18,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -116,6 +116,8 @@ public class ItemServiceImpl implements ItemService {
     return setterPagedGrid(list,page);
     }
 
+
+
     private PagedGridResult setterPagedGrid(List<?> list,Integer page){
         PageInfo<?> pageList = new PageInfo<>(list);
         PagedGridResult grid = new PagedGridResult();
@@ -124,6 +126,45 @@ public class ItemServiceImpl implements ItemService {
         grid.setTotal(pageList.getPages());
         grid.setRecords(pageList.getTotal());
         return grid;
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public PagedGridResult searchItems(String keywords, String sort, Integer page, Integer pageSize) {
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("keywords",keywords);
+        map.put("sort",sort);
+
+        PageHelper.startPage(page, pageSize);
+
+        List<SearchItemVO> list = itemsMapperCustom.searchItems(map);
+
+        return setterPagedGrid(list,page);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public PagedGridResult searchItems(Integer catId, String sort, Integer page, Integer pageSize) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("catId",catId);
+        map.put("sort",sort);
+
+        PageHelper.startPage(page, pageSize);
+
+        List<SearchItemVO> list = itemsMapperCustom.searchItemsByThirdCat(map);
+
+        return setterPagedGrid(list,page);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public List<ShopcartVO> queryItemsBySpecIds(String specIds) {
+        String[] ids = specIds.split(",");
+        List<String> specIdsList = new ArrayList<>();
+        Collections.addAll(specIdsList,ids);
+
+        return itemsMapperCustom.queryItemsBySpecIds(specIdsList);
     }
 
 
