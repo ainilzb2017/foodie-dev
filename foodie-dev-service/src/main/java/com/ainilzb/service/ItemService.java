@@ -60,5 +60,19 @@ public interface ItemService {
      * */
     public List<ShopcartVO> queryItemsBySpecIds(String specIds);
 
+    /*
+     * 根据商品规格id获取规格对象的具体信息
+     * */
+    public ItemsSpec queryItemSpecById(String specId);
+
+    /*
+     * 根据商品id获得商品图片主图url
+     * */
+    public String queryItemMainImgById(String itemId);
+    /*
+     * 减少库存
+     * */
+    public void decreaseItemSpecStock(String specId,int buyCounts);
+
 
 }

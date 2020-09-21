@@ -1,6 +1,7 @@
 package com.ainilzb.service.impl;
 
 import com.ainilzb.enums.CommentLevel;
+import com.ainilzb.enums.YesOrNo;
 import com.ainilzb.mapper.*;
 import com.ainilzb.pojo.*;
 import com.ainilzb.pojo.vo.CommentLevelCountsVO;
@@ -165,6 +166,51 @@ public class ItemServiceImpl implements ItemService {
         Collections.addAll(specIdsList,ids);
 
         return itemsMapperCustom.queryItemsBySpecIds(specIdsList);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public ItemsSpec queryItemSpecById(String specId) {
+
+        return itemsSpecMapper.selectByPrimaryKey(specId);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public String queryItemMainImgById(String itemId) {
+        ItemsImg itemsImg = new ItemsImg();
+        itemsImg.setItemId(itemId);
+        itemsImg.setIsMain(YesOrNo.YES.type);
+        ItemsImg result = itemsImgMapper.selectOne(itemsImg);
+        return result != null ? result.getUrl() : "";
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public void decreaseItemSpecStock(String specId, int buyCounts) {
+
+        //synchronized  不推荐使用，集群下无用，性能低下
+        //锁数据库：不推荐，导致数据库性能低下
+        //分布式锁 zookeeper redis
+
+        //lockUtil.getLock(); --加锁
+        //lockUtil.unlock(); --解锁
+
+
+
+        //1.查询库存
+//        int stock = 2;
+        //2.判断库存，是否能够减少到0以下
+//        if(stock - buyCounts < 0){
+//
+//        }
+
+        int result = itemsMapperCustom.decreaseItemSpecStock(specId,buyCounts);
+        if(result != 1){
+            throw new RuntimeException("订单创建失败，原因：库存不足！");
+        }
+
+
     }
 
 
