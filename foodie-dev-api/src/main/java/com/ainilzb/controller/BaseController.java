@@ -1,7 +1,11 @@
 package com.ainilzb.controller;
 
+import com.ainilzb.pojo.Orders;
+import com.ainilzb.service.center.MyOrdersService;
+import com.ainilzb.utils.IMOOCJSONResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,5 +35,16 @@ public class BaseController {
     public static final String IMAGE_USER_LOCATION = "C:"+File.separator+"Users"+File.separator+"dev3"+File.separator+"IdeaProjects"+File.separator+"images"+File.separator+"foodie"+File.separator+"faces";
 
 
+    @Autowired
+    public MyOrdersService myOrdersService;
+
+    //用于验证用户和订单是否有关联关系，避免非法用户调用
+    public IMOOCJSONResult checkUserOrder(String userId, String orderId){
+        Orders order = myOrdersService.queryMyOrder(userId,orderId);
+        if(order == null){
+            return IMOOCJSONResult.errorMsg("订单不存在");
+        }
+        return IMOOCJSONResult.ok();
+    }
 
 }

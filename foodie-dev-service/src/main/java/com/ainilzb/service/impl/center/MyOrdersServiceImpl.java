@@ -87,7 +87,6 @@ public class MyOrdersServiceImpl implements MyOrdersService {
         orders.setUserId(userId);
         orders.setId(orderId);
         orders.setIsDelete(YesOrNo.NO.type);
-
         return ordersMapper.selectOne(orders);
     }
 

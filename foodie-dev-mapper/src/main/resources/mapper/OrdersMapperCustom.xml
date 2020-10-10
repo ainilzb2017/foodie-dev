@@ -71,7 +71,8 @@
         od.pay_method as payMethod,
         od.real_pay_amount as realPayAmount,
         od.post_amount as postAmount,
-        os.order_status as orderStatus
+        os.order_status as orderStatus,
+        od.is_comment as isComment
 
         from orders od left join order_status os on od.id = os.order_id
         where od.user_id = #{paramsMap.userId}

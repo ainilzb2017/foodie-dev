@@ -22,8 +22,7 @@ import javax.management.ImmutableDescriptor;
 @RestController
 @RequestMapping("/myorders")
 public class MyOrdersController extends BaseController {
-    @Autowired
-    private MyOrdersService myOrdersService;
+
 
     @ApiOperation(value = "查询订单列表",notes = "查询订单列表",httpMethod = "POST")
     @PostMapping("/query")
@@ -63,19 +62,14 @@ public class MyOrdersController extends BaseController {
                                    @RequestParam String orderId,
                                           @ApiParam(name = "userId",value = "用户id",required = true)
                                           @RequestParam String userId) throws Exception{
-
-
         IMOOCJSONResult checkResult = checkUserOrder(userId,orderId);
         if(checkResult.getStatus() != HttpStatus.OK.value()){
             return checkResult;
         }
-
         boolean res = myOrdersService.updateReceiverOrderStatus(orderId);
         if(!res){
             return IMOOCJSONResult.errorMsg("订单确认收货失败！");
         }
-
-
         return IMOOCJSONResult.ok();
     }
 
@@ -85,29 +79,18 @@ public class MyOrdersController extends BaseController {
                                           @RequestParam String orderId,
                                           @ApiParam(name = "userId",value = "用户id",required = true)
                                           @RequestParam String userId) throws Exception{
-
-
         IMOOCJSONResult checkResult = checkUserOrder(userId,orderId);
         if(checkResult.getStatus() != HttpStatus.OK.value()){
             return checkResult;
         }
-
         boolean res = myOrdersService.deleteOrder(userId,orderId);
         if(!res){
             return IMOOCJSONResult.errorMsg("订单删除失败！");
         }
-
         return IMOOCJSONResult.ok();
     }
 
-    //用于验证用户和订单是否有关联关系，避免非法用户调用
-    private IMOOCJSONResult checkUserOrder(String userId,String orderId){
-        Orders order = myOrdersService.queryMyOrder(userId,orderId);
-        if(order == null){
-            return IMOOCJSONResult.errorMsg("订单不存在");
-        }
-        return IMOOCJSONResult.ok();
-    }
+
 
 
 
