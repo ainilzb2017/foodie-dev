@@ -2,7 +2,6 @@ package com.ainilzb.config;
 
 import com.ainilzb.service.OrderService;
 import com.ainilzb.utils.DateUtil;
-import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -12,8 +11,6 @@ public class OrderJob {
 
     @Autowired
     private OrderService orderService;
-
-
 
 //    @Scheduled(cron = "0/3 * * * * ?")
     @Scheduled(cron = "0 0 0/1 * * ?")
