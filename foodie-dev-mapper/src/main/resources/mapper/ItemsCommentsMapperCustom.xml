@@ -35,7 +35,7 @@
     <result column="content" property="content"/>
     <result column="createdTime" property="createdTime"/>
     <result column="itemId" property="itemId"/>
-    <result column="sepcName" property="sepcName"/>
+    <result column="sepcName" property="specName"/>
     <result column="itemName" property="itemName"/>
     <result column="itemImg" property="itemImg"/>
   </resultMap>
