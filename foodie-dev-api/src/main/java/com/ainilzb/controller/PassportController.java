@@ -1,4 +1,5 @@
 package com.ainilzb.controller;
+
 import com.ainilzb.pojo.Users;
 import com.ainilzb.pojo.bo.UserBo;
 import com.ainilzb.service.UserService;
@@ -8,15 +9,10 @@ import com.ainilzb.utils.JsonUtils;
 import com.ainilzb.utils.MD5Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.catalina.User;
-import org.apache.catalina.connector.Request;
-import org.apache.catalina.connector.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
